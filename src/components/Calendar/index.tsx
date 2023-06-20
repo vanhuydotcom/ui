@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CalendarContext, TCalendarContext } from "./context/calendar";
 import { ECalendarStyle, ECalendarType, ICalendarProps } from "./types";
-import { CalendarContainer } from "./styles.css";
+import { CalendarContainer, CalendarFooter } from "./styles.css";
 import HeaderCalendar from "./components/header";
 import CalendarRangePanel from "./components/rangePanel";
 import CalendarPanel from "./components/panel";
@@ -18,9 +18,8 @@ export default function Calendar({
   const [currentDate, setCurrentDate] = useState<Date>(
     (initDates && initDates[0]) ?? new Date()
   );
-  const [selectedDates, setSelectedDates] = useState<Date[]>(
-    initDates ?? [new Date()]
-  );
+  const [selectedDates, setSelectedDates] = useState<Date[]>(initDates ?? []);
+  const today = new Date();
 
   const handleClick = (date: Date) => {
     const selectedStartMonth = date.getMonth();
@@ -98,6 +97,7 @@ export default function Calendar({
     minDate: min,
     maxDate: max,
     calendarStyle: calendarStyle,
+    pickerType: pickerType,
     currentDate: currentDate,
     selectedDates: selectedDates,
     handleDatesClick: handleClick,
@@ -116,6 +116,20 @@ export default function Calendar({
           <CalendarRangePanel />
         ) : (
           <CalendarPanel />
+        )}
+        {today.toDateString() === selectedDates[0]?.toDateString() &&
+        calendarStyle === ECalendarStyle.range ? null : (
+          <CalendarFooter>
+            <span
+              onClick={() => {
+                setSelectedDates([today]);
+                setCurrentDate(today);
+                handleClick(today);
+              }}
+            >
+              Today
+            </span>
+          </CalendarFooter>
         )}
       </CalendarContainer>
     </CalendarContext.Provider>

@@ -5,6 +5,7 @@ export type TCalendarContext = {
   type?: ECalendarType;
   currentDate: Date;
   calendarStyle?: ECalendarStyle;
+  pickerType?: ECalendarStyle;
   minDate?: Date | null;
   maxDate?: Date | null;
   selectedDates: Date[] | null;

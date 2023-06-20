@@ -53,7 +53,7 @@ export default function MonthPanel({ currentDate }: IProps) {
             disable={isDisabled ? 1 : 0}
             onClick={() => handleDatesClick(month)}
           >
-            {item.sortName}
+            <span> {item.sortName}</span>
           </CalendarItem>
         );
       })}

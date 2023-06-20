@@ -31,7 +31,7 @@ export default function CalendarPage() {
                     defaultValue={date?.toLocaleDateString("vi")}
                   />
                   <Calendar
-                    initDates={date && [date]}
+                    // initDates={date && [date]}
                     handleDateClick={(dates) => dates && setDate(dates[0])}
                     max={new Date("2024/06/20")}
                     min={new Date("2022/06/20")}

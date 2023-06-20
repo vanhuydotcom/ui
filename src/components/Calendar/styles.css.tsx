@@ -9,6 +9,10 @@ export const CalendarContainer = styled.div`
   border-radius: 6px;
   overflow: hidden;
   max-width: max-content;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 export const CalendarHeader = styled.div`
   display: flex;
@@ -19,8 +23,22 @@ export const CalendarHeader = styled.div`
   font-size: 16px;
   line-height: 19px;
   text-align: center;
-  padding: 24px 16px;
-  border-bottom: 1px solid #bdbdbd;
+  padding: 8px 0 16px 0;
+  border-bottom: 1px solid #f2f2f2;
+`;
+
+export const CalendarFooter = styled.div`
+  width: 100%;
+  padding: 9px 0;
+  text-align: center;
+  span {
+    cursor: pointer;
+    color: #005aff;
+    &:hover,
+    &:focus {
+      color: #0047cc;
+    }
+  }
 `;
 
 export const ButtonGroup = styled.div`
@@ -31,7 +49,7 @@ export const ButtonGroup = styled.div`
 
 export const CalendarGrid = styled.div<{ type?: ECalendarType }>`
   display: grid;
-  padding: 16px;
+  grid-gap: 10px 0;
   ${({ type }) => {
     switch (type) {
       case ECalendarType.month:
@@ -46,18 +64,41 @@ export const CalendarGrid = styled.div<{ type?: ECalendarType }>`
     }
   }}
 `;
+
+export const CalendarItemWrap = styled.div`
+  &:nth-child(7n + 1) {
+    border-top-left-radius: 50% !important;
+    border-bottom-left-radius: 50% !important;
+    overflow: hidden;
+  }
+  &:nth-child(7n) {
+    border-top-right-radius: 50% !important;
+    border-bottom-right-radius: 50% !important;
+    overflow: hidden;
+  }
+`;
+
 export const CalendarItem = styled.div<{
   type?: ECalendarType;
   active?: 0 | 1;
   inRangeActive?: 0 | 1;
   blur?: 0 | 1;
   disable?: 0 | 1;
+  visible?: 0 | 1;
+  start?: 0 | 1;
+  end?: 0 | 1;
+  pickerRange?: 0 | 1;
+  today?: 0 | 1;
+  fullRange?: 0 | 1;
 }>`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 42px;
   width: 42px;
+  cursor: pointer;
+  color: #333333;
+  transition: all 0.25s ease-in-out;
   ${({ type }) => {
     switch (type) {
       case ECalendarType.month:
@@ -71,10 +112,32 @@ export const CalendarItem = styled.div<{
         `;
     }
   }}
-  cursor: pointer;
-  color: #333333;
-  border-radius: 6px;
-  ${({ disable }) =>
+
+  ${({ pickerRange }) =>
+    pickerRange
+      ? css`
+          border-radius: 100% !important;
+        `
+      : undefined}
+  ${({ start, fullRange }) =>
+    start
+      ? css`
+          border-top-left-radius: 50% !important;
+          border-bottom-left-radius: 50% !important;
+          border-top-right-radius: ${fullRange ? "0" : "50%"}!important;
+          border-bottom-right-radius: ${fullRange ? "0" : "50%"}!important;
+        `
+      : undefined}
+${({ end }) =>
+    end
+      ? css`
+          border-top-right-radius: 50% !important;
+          border-bottom-right-radius: 50% !important;
+        `
+      : undefined}
+
+
+${({ disable }) =>
     disable
       ? css`
           cursor: none;
@@ -83,35 +146,86 @@ export const CalendarItem = styled.div<{
           opacity: 0.4;
         `
       : undefined}
-  ${({ active }) =>
+${({ active }) =>
     active
       ? css`
-          background-color: #007bff;
+          background-color: #eff5ff;
           color: #fff;
         `
       : undefined}
-       ${({ inRangeActive }) =>
+     ${({ inRangeActive }) =>
     inRangeActive
       ? css`
-          background-color: rgba(0, 123, 255, 0.4);
-          color: #fff;
+          background-color: #eff5ff !important;
+          color: #616161;
           border-radius: unset;
+          border: unset !important;
+          transition: all 0.25s ease-in-out;
         `
       : undefined}
-  ${({ blur }) =>
+${({ blur }) =>
     blur
       ? css`
+          opacity: 0.4;
+        `
+      : undefined}
+     ${({ visible }) =>
+    visible
+      ? css`
           opacity: 0;
+          visibility: hidden;
           pointer-events: none !important;
           user-select: none !important;
         `
       : undefined}
+
+    span {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: ${({ type }) =>
+      type === ECalendarType.month ? "6px" : " 50%"};
+    &:hover {
+      background: #cfe0ff;
+      border: 1px solid #005aff !important;
+      color: #005aff;
+      border-radius: ${({ type }) =>
+        type === ECalendarType.month ? "6px" : " 50%"};
+    }
+
+    ${({ active }) =>
+      active
+        ? css`
+            background-color: #007bff !important;
+            color: #fff !important;
+          `
+        : undefined};
+    ${({ inRangeActive }) =>
+      inRangeActive
+        ? css`
+            color: #616161;
+            border-radius: unset;
+            border: unset !important;
+          `
+        : undefined}
+    ${({ today }) =>
+      today
+        ? css`
+            border: 1px solid #4d8cff;
+            color: #005aff;
+            border-radius: 50%;
+          `
+        : undefined}
+  }
 `;
 
 export const RangeCalendar = styled.div`
   display: flex;
   align-items: start;
   width: 100%;
+  gap: 24px;
 `;
 
 export const ContentWrap = styled.div`

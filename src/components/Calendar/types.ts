@@ -1,7 +1,7 @@
 export enum ECalendarType {
   date = "date",
   month = "month",
-  yarn = "year",
+  year = "year",
 }
 
 export enum ECalendarStyle {
