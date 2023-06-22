@@ -233,3 +233,4 @@ export const ContentWrap = styled.div`
   align-items: center;
   justify-content: space-around;
 `;
+3;
