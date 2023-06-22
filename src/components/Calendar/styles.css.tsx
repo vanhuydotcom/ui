@@ -98,7 +98,7 @@ export const CalendarItem = styled.div<{
   width: 42px;
   cursor: pointer;
   color: #333333;
-  transition: all 0.25s ease-in-out;
+  transition: initial 0.25s ease-in;
   ${({ type }) => {
     switch (type) {
       case ECalendarType.month:
@@ -157,10 +157,9 @@ ${({ active }) =>
     inRangeActive
       ? css`
           background-color: #eff5ff !important;
-          color: #616161;
           border-radius: unset;
           border: unset !important;
-          transition: all 0.25s ease-in-out;
+          transition: initial 0.25s ease-in;
         `
       : undefined}
 ${({ blur }) =>
@@ -190,7 +189,7 @@ ${({ blur }) =>
     &:hover {
       background: #cfe0ff;
       border: 1px solid #005aff !important;
-      color: #005aff;
+      color: #005aff !important;
       border-radius: ${({ type }) =>
         type === ECalendarType.month ? "6px" : " 50%"};
     }
@@ -205,7 +204,7 @@ ${({ blur }) =>
     ${({ inRangeActive }) =>
       inRangeActive
         ? css`
-            color: #616161;
+            color: #616161 !important;
             border-radius: unset;
             border: unset !important;
           `

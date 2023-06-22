@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { daysInWeek } from "../../const";
 import { useCalendar } from "../../context/calendar";
 import { CalendarItem, CalendarGrid, CalendarItemWrap } from "../../styles.css";
@@ -69,7 +70,6 @@ export default function DatePanel({ currentDate }: IProps) {
     const isBorderStartDay = i === 1 && calendarStyle === ECalendarStyle.range;
     const isBorderEndDay =
       i === daysInMonth && calendarStyle === ECalendarStyle.range;
-    console.log();
     calendarGrid.push(
       <CalendarItem
         fullRange={selectedDates && selectedDates.length > 1 ? 1 : 0}

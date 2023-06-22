@@ -79,7 +79,6 @@ export default function CalendarPage() {
                         pickerType={ECalendarStyle.range}
                         initDates={dates}
                         handleDateClick={(dates) => {
-                          console.log(dates);
                           setDates(dates);
                         }}
                         max={new Date("2024/06/20")}
@@ -111,7 +110,6 @@ export default function CalendarPage() {
                         pickerType={ECalendarStyle.range}
                         calendarStyle={ECalendarStyle.range}
                         handleDateClick={(dates) => {
-                          console.log(dates);
                           setDates(dates);
                         }}
                         max={new Date("2024/06/20")}
@@ -139,7 +137,6 @@ export default function CalendarPage() {
                         pickerType={ECalendarStyle.range}
                         calendarStyle={ECalendarStyle.range}
                         handleDateClick={(dates) => {
-                          console.log(dates);
                           setDates(dates);
                         }}
                         max={new Date("2024/06/20")}

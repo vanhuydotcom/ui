@@ -1,60 +1,83 @@
-import { useState } from "react";
+import { useImperativeHandle, useState } from "react";
 import { CalendarContext, TCalendarContext } from "./context/calendar";
-import { ECalendarStyle, ECalendarType, ICalendarProps } from "./types";
+import {
+  ECalendarStyle,
+  ECalendarType,
+  ICalendarProps,
+  TCalendarRef,
+} from "./types";
 import { CalendarContainer, CalendarFooter } from "./styles.css";
 import HeaderCalendar from "./components/header";
 import CalendarRangePanel from "./components/rangePanel";
 import CalendarPanel from "./components/panel";
+import React from "react";
 
-export default function Calendar({
-  initDates,
-  type = ECalendarType.date,
-  pickerType = ECalendarStyle.single,
-  calendarStyle = ECalendarStyle.single,
-  min,
-  max,
-  handleDateClick,
-}: ICalendarProps) {
+const Calendar = React.forwardRef(function CalendarComponent(
+  {
+    initDates,
+    type = ECalendarType.date,
+    pickerType = ECalendarStyle.single,
+    calendarStyle = ECalendarStyle.single,
+    min,
+    max,
+    handleDateClick,
+  }: ICalendarProps,
+  ref: React.ForwardedRef<TCalendarRef>
+) {
   const [currentDate, setCurrentDate] = useState<Date>(
     (initDates && initDates[0]) ?? new Date()
   );
   const [selectedDates, setSelectedDates] = useState<Date[]>(initDates ?? []);
   const today = new Date();
 
-  const handleClick = (date: Date) => {
-    const selectedStartMonth = date.getMonth();
+  const onPicker = (date: Date | null) => {
+    if (!date) {
+      setCurrentDate(new Date());
+      setSelectedDates([]);
+      return;
+    }
 
+    const selectedStartMonth = date.getMonth();
+    const selectedStartYear = date.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    if (
+      selectedStartMonth !== currentMonth ||
+      selectedStartYear !== currentYear
+    ) {
+      setCurrentDate(date);
+    }
+
+    const datesRange = selectedDates;
+    const startDate = datesRange[0];
+    const endDate = datesRange[1];
     switch (pickerType) {
       case ECalendarStyle.range:
-        const datesRange = selectedDates;
-        const startDate = datesRange[0];
-        const endDate = datesRange[1];
-
         if ((!endDate && date > startDate) || date > endDate) {
-          setSelectedDates([startDate, date]);
           handleDateClick([startDate, date]);
+          setSelectedDates([startDate, date]);
         } else if (!endDate && date < startDate) {
-          setSelectedDates([date, startDate]);
           handleDateClick([date, startDate]);
+          setSelectedDates([date, startDate]);
         } else if (datesRange && datesRange.length > 1 && date < startDate) {
-          setSelectedDates([date, endDate]);
           handleDateClick([date, endDate]);
+          setSelectedDates([date, endDate]);
         } else {
-          setSelectedDates([date]);
           handleDateClick([date]);
+          setSelectedDates([date]);
         }
 
         break;
 
       default:
-        if (selectedStartMonth !== currentDate.getMonth()) {
-          setCurrentDate(date);
-        }
         handleDateClick([date]);
         setSelectedDates([date]);
         break;
     }
   };
+
+  useImperativeHandle(ref, () => ({ onPicker }));
 
   const goToNextMonth = () => {
     setCurrentDate((prevDate) => {
@@ -100,7 +123,7 @@ export default function Calendar({
     pickerType: pickerType,
     currentDate: currentDate,
     selectedDates: selectedDates,
-    handleDatesClick: handleClick,
+    handleDatesClick: onPicker,
   };
 
   return (
@@ -117,14 +140,14 @@ export default function Calendar({
         ) : (
           <CalendarPanel />
         )}
-        {today.toDateString() === selectedDates[0]?.toDateString() &&
+        {today.toDateString() === selectedDates[0]?.toDateString() ||
         calendarStyle === ECalendarStyle.range ? null : (
           <CalendarFooter>
             <span
               onClick={() => {
                 setSelectedDates([today]);
                 setCurrentDate(today);
-                handleClick(today);
+                onPicker(today);
               }}
             >
               Today
@@ -134,4 +157,6 @@ export default function Calendar({
       </CalendarContainer>
     </CalendarContext.Provider>
   );
-}
+});
+
+export default Calendar;

@@ -18,3 +18,7 @@ export interface ICalendarProps {
   max?: Date | null;
   handleDateClick(dates: Date[] | null): void;
 }
+
+export type TCalendarRef = {
+  onPicker(date: Date | null): void;
+};
